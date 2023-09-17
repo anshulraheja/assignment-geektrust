@@ -1,38 +1,237 @@
-.App {
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+* {
+  margin: 0;
+  border: 0;
+  outline: 0;
+}
+
+nav,
+main,
+aside,
+footer,
+header,
+section {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: top;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  /* border: 1px solid black; */
+}
+
+th,
+td {
+  padding: 0;
+  text-align: left;
+  /* border: 1px solid black; */
+}
+
+/* main css */
+.container {
+  padding: 1rem;
+}
+
+.search-container {
+  position: relative;
+  max-width: 500px;
+  margin: 1rem auto;
+  box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  top: 58%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.search-icon > svg {
+  font-size: 1.25rem;
+  color: #7d7d7d;
+}
+.search-input {
+  padding-right: 30px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1.25rem;
+}
+.table-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  margin: 1rem auto;
+  box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+.table {
+  width: 100%;
+  border: none;
+  max-width: 100%;
+  white-space: nowrap;
+}
+.table th,
+.table td {
   text-align: center;
+  padding: 8px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.table th {
+  color: #ffffff;
+  background: #324960;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.table td {
+  border-right: 1px solid #f8f8f8;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.table tr:nth-child(even) {
+  background: #f8f8f8;
+}
+.checkbox {
+  width: 15px;
+  height: 20px;
+  cursor: pointer;
+}
+.action-wrapper {
   display: flex;
-  flex-direction: column;
+  gap: 0.75rem;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.action-wrapper > svg {
+  width: 20px;
+  height: 20px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.footer {
+  width: 1100px;
+  margin: 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn-delete-selected {
+  padding: 10px 24px;
+  border-radius: 7px;
+  min-width: 142px;
+  border: 1px solid black;
+}
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pagination-wrapper > svg {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+@media (max-width: 767px) {
+  .table {
+    display: block;
+    width: 100%;
   }
-  to {
-    transform: rotate(360deg);
+  .table-wrapper:before {
+    content: 'Scroll horizontally >';
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    color: white;
+    padding: 0 0 10px;
+  }
+  .table thead,
+  .table tbody,
+  .table thead th {
+    display: block;
+  }
+  .table thead th:last-child {
+    border-bottom: none;
+  }
+  .table thead {
+    float: left;
+  }
+  .table tbody {
+    width: auto;
+    position: relative;
+    overflow-x: auto;
+  }
+  .table td,
+  .table th {
+    padding: 20px 0.625rem 0.625rem 0.625rem;
+    height: 60px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 120px;
+    font-size: 13px;
+    text-overflow: ellipsis;
+  }
+  .table thead th {
+    text-align: left;
+    border-bottom: 1px solid #f7f7f9;
+  }
+  .table tbody tr {
+    display: table-cell;
+  }
+  .table tbody tr:nth-child(odd) {
+    background: none;
+  }
+  .table tr:nth-child(even) {
+    background: transparent;
+  }
+  .table tr td:nth-child(odd) {
+    background: #f8f8f8;
+    border-right: 1px solid #e6e4e4;
+  }
+  .table tr td:nth-child(even) {
+    border-right: 1px solid #e6e4e4;
+  }
+  .table tbody td {
+    display: block;
+    text-align: center;
   }
 }
