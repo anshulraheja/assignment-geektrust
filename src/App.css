@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 html {
   box-sizing: border-box;
@@ -57,14 +57,12 @@ button {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-  /* border: 1px solid black; */
 }
 
 th,
 td {
   padding: 0;
   text-align: left;
-  /* border: 1px solid black; */
 }
 
 /* main css */
@@ -102,7 +100,6 @@ td {
   width: 100%;
   max-width: 1100px;
   margin: 1rem auto;
-  box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
 .table {
@@ -110,6 +107,7 @@ td {
   border: none;
   max-width: 100%;
   white-space: nowrap;
+  box-shadow: 0px 35px 50px rgba(0, 0, 0, 0.2);
 }
 .table th,
 .table td {
@@ -118,18 +116,20 @@ td {
 }
 .table th {
   color: #ffffff;
-  background: #324960;
+  background: rgb(1, 105, 86);
+  font-size: 18px;
 }
 .table td {
-  border-right: 1px solid #f8f8f8;
+  /* border-right: 1px solid #f8f8f8; */
 }
 .table tr:nth-child(even) {
-  background: #f8f8f8;
+  background: #e5f0ee;
 }
 .checkbox {
   width: 15px;
   height: 20px;
   cursor: pointer;
+  accent-color: rgb(0, 193, 161);
 }
 .action-wrapper {
   display: flex;
@@ -142,7 +142,7 @@ td {
   height: 20px;
 }
 .footer {
-  width: 1100px;
+  min-height: 50px;
   margin: 1rem auto;
   display: flex;
   align-items: center;
@@ -152,7 +152,10 @@ td {
   padding: 10px 24px;
   border-radius: 7px;
   min-width: 142px;
-  border: 1px solid black;
+  border: 1px solid #f4f4f2;
+  background: #cb202d;
+  color: #f4f4f2;
+  font-weight: 800;
 }
 .pagination-wrapper {
   display: flex;
@@ -165,9 +168,14 @@ td {
   cursor: pointer;
 }
 .active {
-  background: green;
+  color: rgb(1, 106, 87);
+  border-radius: 50%;
+  border: 1px solid rgb(1, 106, 87);
   pointer-events: none;
   cursor: not-allowed;
+  justify-content: center;
+  width: max-content;
+  height: max-content;
 }
 .disabled {
   pointer-events: none;

@@ -297,87 +297,91 @@ function App() {
                     ))
                   ) : (
                     <tr>
-                      <td colspan="5">No Records</td>
+                      <td colSpan="5">No Records</td>
                     </tr>
                   )}
                 </tbody>
               </table>
-            </div>
-            <div className="footer">
-              <div>
-                <button
-                  className="btn-delete-selected"
-                  onClick={handleDeleteSelected}
-                >
-                  Delete Selected
-                </button>
-              </div>
-              <div className="pagination-wrapper">
-                <MdKeyboardDoubleArrowLeft
-                  onClick={() => {
-                    if (currentPage !== 1) {
-                      setCurrentPage(1);
-                    }
-                  }}
-                  className={
-                    currentPage === 1 || !displayedData.length
-                      ? 'disabled'
-                      : ''
-                  }
-                />
-                <GrFormPrevious
-                  onClick={() => {
-                    if (currentPage !== 1) {
-                      setCurrentPage(currentPage - 1);
-                    }
-                  }}
-                  className={
-                    currentPage === 1 || !displayedData.length
-                      ? 'disabled'
-                      : ''
-                  }
-                />
-                {paginationButtons.map((page) => (
-                  <button
-                    key={page}
+              <div className="footer">
+                <div>
+                  {selectedRows.length > 0 && (
+                    <button
+                      className="btn-delete-selected"
+                      onClick={handleDeleteSelected}
+                    >
+                      Delete Selected
+                    </button>
+                  )}
+                </div>
+                <div className="pagination-wrapper">
+                  <MdKeyboardDoubleArrowLeft
                     onClick={() => {
-                      if (page !== currentPage) {
-                        setCurrentPage(page);
+                      if (currentPage !== 1) {
+                        setCurrentPage(1);
                       }
                     }}
                     className={
-                      page === currentPage || !displayedData.length
-                        ? 'active'
+                      currentPage === 1 || !displayedData.length
+                        ? 'disabled'
                         : ''
                     }
-                  >
-                    {page}
-                  </button>
-                ))}
-                <GrFormNext
-                  onClick={() => {
-                    if (currentPage !== pageCount) {
-                      setCurrentPage(currentPage + 1);
+                  />
+                  <GrFormPrevious
+                    onClick={() => {
+                      if (currentPage !== 1) {
+                        setCurrentPage(currentPage - 1);
+                      }
+                    }}
+                    className={
+                      currentPage === 1 || !displayedData.length
+                        ? 'disabled'
+                        : ''
                     }
-                  }}
-                  className={
-                    currentPage === pageCount || !displayedData.length
-                      ? 'disabled'
-                      : ''
-                  }
-                />
-                <MdKeyboardDoubleArrowRight
-                  onClick={() => {
-                    if (currentPage !== pageCount) {
-                      setCurrentPage(pageCount);
+                  />
+                  {paginationButtons.map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => {
+                        if (page !== currentPage) {
+                          setCurrentPage(page);
+                        }
+                      }}
+                      className={
+                        page === currentPage || !displayedData.length
+                          ? 'active'
+                          : ''
+                      }
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <GrFormNext
+                    onClick={() => {
+                      if (currentPage !== pageCount) {
+                        setCurrentPage(currentPage + 1);
+                      }
+                    }}
+                    className={
+                      currentPage === pageCount ||
+                      !displayedData.length
+                        ? 'disabled'
+                        : ''
                     }
-                  }}
-                  className={
-                    currentPage === pageCount || !displayedData.length
-                      ? 'disabled'
-                      : ''
-                  }
-                />
+                  />
+                  <MdKeyboardDoubleArrowRight
+                    onClick={() => {
+                      if (currentPage !== pageCount) {
+                        setCurrentPage(pageCount);
+                      }
+                    }}
+                    className={
+                      currentPage === pageCount ||
+                      !displayedData.length
+                        ? 'disabled'
+                        : ''
+                    }
+                  />
+                </div>
               </div>
             </div>
           </>
