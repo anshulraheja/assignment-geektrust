@@ -17,6 +17,9 @@ function App() {
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [editingRow, setEditingRow] = useState(null);
+  const [editedValues, setEditedValues] = useState({});
 
   const getMembersData = async () => {
     setLoading(true);
@@ -39,12 +42,68 @@ function App() {
     setSearchQuery(e.target.value);
   };
   const handleDeleteSingleRecord = (id) => {
-    console.log(id);
     let updatedMemberData = memberData?.filter(
       (member) => member.id !== id
     );
-    console.log(updatedMemberData);
     setMemberData(updatedMemberData);
+  };
+  const handleSelectRow = (id) => {
+    const isSelected = selectedRows.includes(id);
+    if (isSelected) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    } else {
+      setSelectedRows([...selectedRows, id]);
+    }
+  };
+  const handleDeleteSelected = () => {
+    const updatedMemberData = memberData.filter(
+      (member) => !selectedRows.includes(member.id)
+    );
+    setMemberData(updatedMemberData);
+    setSelectedRows([]);
+  };
+
+  const handleEditClick = (id) => {
+    setEditingRow(id);
+    const member = memberData.find((m) => m.id === id);
+    setEditedValues({
+      ...editedValues,
+      [id]: {
+        name: member.name,
+        email: member.email,
+        role: member.role,
+      },
+    });
+  };
+
+  const handleSaveClick = (id) => {
+    const updatedMemberData = memberData.map((member) => {
+      if (member.id === id) {
+        return {
+          ...member,
+          ...editedValues[id],
+        };
+      }
+      return member;
+    });
+    setMemberData(updatedMemberData);
+    setEditingRow(null);
+    setEditedValues({});
+  };
+
+  const handleCancelClick = (id) => {
+    setEditedValues({});
+    setEditingRow(null);
+  };
+
+  const handleEditChange = (id, field, value) => {
+    setEditedValues({
+      ...editedValues,
+      [id]: {
+        ...editedValues[id],
+        [field]: value,
+      },
+    });
   };
 
   useEffect(() => {
@@ -108,7 +167,28 @@ function App() {
                 <thead>
                   <tr className="table-header">
                     <th>
-                      <input type="checkbox" className="checkbox" />
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        disabled={!displayedData.length}
+                        checked={
+                          selectedRows.length ===
+                            displayedData.length &&
+                          displayedData.length
+                        }
+                        onChange={() => {
+                          if (
+                            selectedRows.length ===
+                            displayedData.length
+                          ) {
+                            setSelectedRows([]);
+                          } else {
+                            setSelectedRows(
+                              displayedData.map((member) => member.id)
+                            );
+                          }
+                        }}
+                      />
                     </th>
                     <th>Name</th>
                     <th>Email</th>
@@ -117,30 +197,118 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayedData?.map((member) => (
-                    <tr key={member.id}>
-                      <td>
-                        <input type="checkbox" className="checkbox" />
-                      </td>
-                      <td>{member?.name}</td>
-                      <td>{member?.email}</td>
-                      <td>{member?.role}</td>
-                      <td className="action-wrapper">
-                        <RiDeleteBin5Line
-                          onClick={() =>
-                            handleDeleteSingleRecord(member?.id)
-                          }
-                        />
-                        <FiEdit />
-                      </td>
+                  {displayedData.length > 0 ? (
+                    displayedData?.map((member) => (
+                      <tr key={member.id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            className="checkbox"
+                            checked={selectedRows.includes(member.id)}
+                            onChange={() =>
+                              handleSelectRow(member.id)
+                            }
+                          />
+                        </td>
+                        {editingRow === member.id ? (
+                          <>
+                            <td>
+                              <input
+                                type="text"
+                                value={
+                                  editedValues[member.id]?.name || ''
+                                }
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    member.id,
+                                    'name',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={
+                                  editedValues[member.id]?.email || ''
+                                }
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    member.id,
+                                    'email',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={
+                                  editedValues[member.id]?.role || ''
+                                }
+                                onChange={(e) =>
+                                  handleEditChange(
+                                    member.id,
+                                    'role',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </td>
+                            <td className="action-wrapper">
+                              <button
+                                onClick={() =>
+                                  handleSaveClick(member.id)
+                                }
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleCancelClick(member.id)
+                                }
+                              >
+                                Cancel
+                              </button>
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td>{member?.name}</td>
+                            <td>{member?.email}</td>
+                            <td>{member?.role}</td>
+                            <td className="action-wrapper">
+                              <RiDeleteBin5Line
+                                onClick={() =>
+                                  handleDeleteSingleRecord(member?.id)
+                                }
+                              />
+                              <FiEdit
+                                onClick={() =>
+                                  handleEditClick(member.id)
+                                }
+                              />
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colspan="5">No Records</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
             <div className="footer">
               <div>
-                <button className="btn-delete-selected">
+                <button
+                  className="btn-delete-selected"
+                  onClick={handleDeleteSelected}
+                >
                   Delete Selected
                 </button>
               </div>
@@ -151,7 +319,11 @@ function App() {
                       setCurrentPage(1);
                     }
                   }}
-                  className={currentPage === 1 ? 'disabled' : ''}
+                  className={
+                    currentPage === 1 || !displayedData.length
+                      ? 'disabled'
+                      : ''
+                  }
                 />
                 <GrFormPrevious
                   onClick={() => {
@@ -159,7 +331,11 @@ function App() {
                       setCurrentPage(currentPage - 1);
                     }
                   }}
-                  className={currentPage === 1 ? 'disabled' : ''}
+                  className={
+                    currentPage === 1 || !displayedData.length
+                      ? 'disabled'
+                      : ''
+                  }
                 />
                 {paginationButtons.map((page) => (
                   <button
@@ -169,7 +345,11 @@ function App() {
                         setCurrentPage(page);
                       }
                     }}
-                    className={page === currentPage ? 'active' : ''}
+                    className={
+                      page === currentPage || !displayedData.length
+                        ? 'active'
+                        : ''
+                    }
                   >
                     {page}
                   </button>
@@ -181,7 +361,9 @@ function App() {
                     }
                   }}
                   className={
-                    currentPage === pageCount ? 'disabled' : ''
+                    currentPage === pageCount || !displayedData.length
+                      ? 'disabled'
+                      : ''
                   }
                 />
                 <MdKeyboardDoubleArrowRight
@@ -191,7 +373,9 @@ function App() {
                     }
                   }}
                   className={
-                    currentPage === pageCount ? 'disabled' : ''
+                    currentPage === pageCount || !displayedData.length
+                      ? 'disabled'
+                      : ''
                   }
                 />
               </div>
