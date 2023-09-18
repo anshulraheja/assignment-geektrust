@@ -35,6 +35,9 @@ function App() {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
   const handleDeleteSingleRecord = (id) => {
     console.log(id);
     let updatedMemberData = memberData?.filter(
@@ -94,7 +97,7 @@ function App() {
                 className="search-input"
                 placeholder="Search..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearch}
               />
               <div className="search-icon">
                 <FiSearch />
