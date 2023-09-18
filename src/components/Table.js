@@ -1,5 +1,7 @@
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { FiEdit } from 'react-icons/fi';
+import { MdOutlineCancel } from 'react-icons/md';
+import { AiOutlineSave } from 'react-icons/ai';
 
 const Table = (props) => {
   const {
@@ -61,6 +63,7 @@ const Table = (props) => {
                 <>
                   <td>
                     <input
+                      className="edit-input"
                       type="text"
                       value={editedValues[member.id]?.name || ''}
                       onChange={(e) =>
@@ -74,6 +77,7 @@ const Table = (props) => {
                   </td>
                   <td>
                     <input
+                      className="edit-input"
                       type="text"
                       value={editedValues[member.id]?.email || ''}
                       onChange={(e) =>
@@ -87,6 +91,7 @@ const Table = (props) => {
                   </td>
                   <td>
                     <input
+                      className="edit-input"
                       type="text"
                       value={editedValues[member.id]?.role || ''}
                       onChange={(e) =>
@@ -99,16 +104,15 @@ const Table = (props) => {
                     />
                   </td>
                   <td className="action-wrapper">
-                    <button
+                    <AiOutlineSave
+                      className="btn-save"
                       onClick={() => handleSaveClick(member.id)}
-                    >
-                      Save
-                    </button>
-                    <button
+                    />
+
+                    <MdOutlineCancel
+                      className="btn-cancel"
                       onClick={() => handleCancelClick(member.id)}
-                    >
-                      Cancel
-                    </button>
+                    />
                   </td>
                 </>
               ) : (

@@ -128,7 +128,7 @@ td {
   font-size: 18px;
 }
 .table td {
-  /* border-right: 1px solid #f8f8f8; */
+  border-right: 1px solid #f8f8f8;
 }
 .table tr:nth-child(even) {
   background: #e5f0ee;
@@ -139,6 +139,11 @@ td {
   cursor: pointer;
   accent-color: rgb(0, 193, 161);
 }
+.edit-input {
+  text-align: center;
+  border: 1px solid hsl(170, 98%, 21%);
+  border-radius: 4px;
+}
 .action-wrapper {
   display: flex;
   gap: 0.75rem;
@@ -148,6 +153,13 @@ td {
 .action-wrapper > svg {
   width: 20px;
   height: 20px;
+  cursor: pointer;
+}
+.btn-save {
+  color: hsl(170, 98%, 21%);
+}
+.btn-cancel {
+  color: #cb202d;
 }
 .footer {
   min-height: 50px;
