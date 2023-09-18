@@ -145,7 +145,7 @@ function App() {
     <>
       <div className="container">
         {loading ? (
-          <div>Loading...</div>
+          <div className="loader">Loading...</div>
         ) : error ? (
           <div>Something went wrong. Please try again later.</div>
         ) : (
