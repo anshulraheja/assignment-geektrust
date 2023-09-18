@@ -9,33 +9,25 @@ import {
 } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 
-const pageSize = 10; // Number of records per page
+const pageSize = 10;
 
 function App() {
   const [memberData, setMemberData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
   const pageCount = Math.ceil(memberData.length / pageSize);
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, memberData.length);
-  const displayedData = memberData.slice(startIndex, endIndex);
-  const paginationButtons = [];
-  for (let i = 1; i <= pageCount; i++) {
-    paginationButtons.push(
-      <button
-        key={i}
-        onClick={() => {
-          if (currentPage !== i) {
-            setCurrentPage(i);
-          }
-        }}
-      >
-        {i}
-      </button>
-    );
-  }
+  const displayedData = memberData.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const paginationButtons = Array.from(
+    { length: pageCount },
+    (_, i) => i + 1
+  );
 
   const getMembersData = async () => {
     setLoading(true);
@@ -131,7 +123,19 @@ function App() {
                   }}
                   className={currentPage === 1 ? 'disabled' : ''}
                 />
-                {paginationButtons?.map((ele) => ele)}
+                {paginationButtons.map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => {
+                      if (page !== currentPage) {
+                        setCurrentPage(page);
+                      }
+                    }}
+                    className={page === currentPage ? 'active' : ''}
+                  >
+                    {page}
+                  </button>
+                ))}
                 <GrFormNext
                   onClick={() => {
                     if (currentPage !== pageCount) {

@@ -164,6 +164,11 @@ td {
   height: 25px;
   cursor: pointer;
 }
+.active {
+  background: green;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 .disabled {
   pointer-events: none;
   opacity: 0.6;
