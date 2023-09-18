@@ -16,18 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const pageCount = Math.ceil(memberData.length / pageSize);
-
-  const displayedData = memberData.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const paginationButtons = Array.from(
-    { length: pageCount },
-    (_, i) => i + 1
-  );
+  const [searchQuery, setSearchQuery] = useState();
 
   const getMembersData = async () => {
     setLoading(true);
@@ -46,9 +35,49 @@ function App() {
     }
   };
 
+  const handleDeleteSingleRecord = (id) => {
+    console.log(id);
+    let updatedMemberData = memberData?.filter(
+      (member) => member.id !== id
+    );
+    console.log(updatedMemberData);
+    setMemberData(updatedMemberData);
+  };
+
   useEffect(() => {
     getMembersData();
   }, []);
+
+  const filteredData =
+    memberData &&
+    memberData?.filter((member) => {
+      const { name, email, role } = member;
+      const query = searchQuery?.toLowerCase();
+      return (
+        name?.toLowerCase().includes(query) ||
+        email?.toLowerCase().includes(query) ||
+        role?.toLowerCase().includes(query)
+      );
+    });
+
+  const pageCount = searchQuery
+    ? Math.ceil(filteredData.length / pageSize)
+    : Math.ceil(memberData.length / pageSize);
+
+  const displayedData = searchQuery
+    ? filteredData.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+      )
+    : memberData.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+      );
+
+  const paginationButtons = Array.from(
+    { length: pageCount },
+    (_, i) => i + 1
+  );
 
   return (
     <>
@@ -64,6 +93,8 @@ function App() {
                 type="text"
                 className="search-input"
                 placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <div className="search-icon">
                 <FiSearch />
@@ -92,7 +123,11 @@ function App() {
                       <td>{member?.email}</td>
                       <td>{member?.role}</td>
                       <td className="action-wrapper">
-                        <RiDeleteBin5Line />
+                        <RiDeleteBin5Line
+                          onClick={() =>
+                            handleDeleteSingleRecord(member?.id)
+                          }
+                        />
                         <FiEdit />
                       </td>
                     </tr>
