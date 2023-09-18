@@ -1,15 +1,13 @@
 import './App.css';
-import { FiSearch } from 'react-icons/fi';
-import { RiDeleteBin5Line } from 'react-icons/ri';
-import { FiEdit } from 'react-icons/fi';
-import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import {
-  MdKeyboardDoubleArrowRight,
-  MdKeyboardDoubleArrowLeft,
-} from 'react-icons/md';
 import { useEffect, useState } from 'react';
+import SearchBar from './components/SeachBar';
+import Loader from './components/Loader';
+import Table from './components/Table';
+import Pagination from './components/Pagination';
 
 const pageSize = 10;
+const GET_MEMBER_API_URL =
+  'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json';
 
 function App() {
   const [memberData, setMemberData] = useState([]);
@@ -24,9 +22,7 @@ function App() {
   const getMembersData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        'https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json'
-      );
+      const response = await fetch(GET_MEMBER_API_URL);
       if (response.ok) {
         const data = await response.json();
         setMemberData(data);
@@ -136,172 +132,30 @@ function App() {
         currentPage * pageSize
       );
 
-  const paginationButtons = Array.from(
-    { length: pageCount },
-    (_, i) => i + 1
-  );
-
   return (
     <>
       <div className="container">
         {loading ? (
-          <div className="loader">Loading...</div>
+          <Loader />
         ) : error ? (
           <div>Something went wrong. Please try again later.</div>
         ) : (
           <>
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={handleSearch}
-              />
-              <div className="search-icon">
-                <FiSearch />
-              </div>
-            </div>
+            <SearchBar value={searchQuery} onChange={handleSearch} />
             <div className="table-wrapper">
-              <table className="table">
-                <thead>
-                  <tr className="table-header">
-                    <th>
-                      <input
-                        type="checkbox"
-                        className="checkbox"
-                        disabled={!displayedData.length}
-                        checked={
-                          selectedRows.length ===
-                            displayedData.length &&
-                          displayedData.length
-                        }
-                        onChange={() => {
-                          if (
-                            selectedRows.length ===
-                            displayedData.length
-                          ) {
-                            setSelectedRows([]);
-                          } else {
-                            setSelectedRows(
-                              displayedData.map((member) => member.id)
-                            );
-                          }
-                        }}
-                      />
-                    </th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayedData.length > 0 ? (
-                    displayedData?.map((member) => (
-                      <tr key={member.id}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="checkbox"
-                            checked={selectedRows.includes(member.id)}
-                            onChange={() =>
-                              handleSelectRow(member.id)
-                            }
-                          />
-                        </td>
-                        {editingRow === member.id ? (
-                          <>
-                            <td>
-                              <input
-                                type="text"
-                                value={
-                                  editedValues[member.id]?.name || ''
-                                }
-                                onChange={(e) =>
-                                  handleEditChange(
-                                    member.id,
-                                    'name',
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={
-                                  editedValues[member.id]?.email || ''
-                                }
-                                onChange={(e) =>
-                                  handleEditChange(
-                                    member.id,
-                                    'email',
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </td>
-                            <td>
-                              <input
-                                type="text"
-                                value={
-                                  editedValues[member.id]?.role || ''
-                                }
-                                onChange={(e) =>
-                                  handleEditChange(
-                                    member.id,
-                                    'role',
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </td>
-                            <td className="action-wrapper">
-                              <button
-                                onClick={() =>
-                                  handleSaveClick(member.id)
-                                }
-                              >
-                                Save
-                              </button>
-                              <button
-                                onClick={() =>
-                                  handleCancelClick(member.id)
-                                }
-                              >
-                                Cancel
-                              </button>
-                            </td>
-                          </>
-                        ) : (
-                          <>
-                            <td>{member?.name}</td>
-                            <td>{member?.email}</td>
-                            <td>{member?.role}</td>
-                            <td className="action-wrapper">
-                              <RiDeleteBin5Line
-                                onClick={() =>
-                                  handleDeleteSingleRecord(member?.id)
-                                }
-                              />
-                              <FiEdit
-                                onClick={() =>
-                                  handleEditClick(member.id)
-                                }
-                              />
-                            </td>
-                          </>
-                        )}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5">No Records</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+              <Table
+                displayedData={displayedData}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                editingRow={editingRow}
+                handleSelectRow={handleSelectRow}
+                handleEditChange={handleEditChange}
+                editedValues={editedValues}
+                handleSaveClick={handleSaveClick}
+                handleCancelClick={handleCancelClick}
+                handleDeleteSingleRecord={handleDeleteSingleRecord}
+                handleEditClick={handleEditClick}
+              />
               <div className="footer">
                 <div>
                   {selectedRows.length > 0 && (
@@ -313,75 +167,12 @@ function App() {
                     </button>
                   )}
                 </div>
-                <div className="pagination-wrapper">
-                  <MdKeyboardDoubleArrowLeft
-                    onClick={() => {
-                      if (currentPage !== 1) {
-                        setCurrentPage(1);
-                      }
-                    }}
-                    className={
-                      currentPage === 1 || !displayedData.length
-                        ? 'disabled'
-                        : ''
-                    }
-                  />
-                  <GrFormPrevious
-                    onClick={() => {
-                      if (currentPage !== 1) {
-                        setCurrentPage(currentPage - 1);
-                      }
-                    }}
-                    className={
-                      currentPage === 1 || !displayedData.length
-                        ? 'disabled'
-                        : ''
-                    }
-                  />
-                  {paginationButtons.map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => {
-                        if (page !== currentPage) {
-                          setCurrentPage(page);
-                        }
-                      }}
-                      className={
-                        page === currentPage || !displayedData.length
-                          ? 'active'
-                          : ''
-                      }
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <GrFormNext
-                    onClick={() => {
-                      if (currentPage !== pageCount) {
-                        setCurrentPage(currentPage + 1);
-                      }
-                    }}
-                    className={
-                      currentPage === pageCount ||
-                      !displayedData.length
-                        ? 'disabled'
-                        : ''
-                    }
-                  />
-                  <MdKeyboardDoubleArrowRight
-                    onClick={() => {
-                      if (currentPage !== pageCount) {
-                        setCurrentPage(pageCount);
-                      }
-                    }}
-                    className={
-                      currentPage === pageCount ||
-                      !displayedData.length
-                        ? 'disabled'
-                        : ''
-                    }
-                  />
-                </div>
+                <Pagination
+                  pageCount={pageCount}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  displayedData={displayedData}
+                />
               </div>
             </div>
           </>
